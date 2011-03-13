@@ -60,3 +60,5 @@ rails g scaffold account name:string website:string --orm ''
 (We need to specifiy an ORM since we're not using Active Record, except we don't want one. Specifying '' will allow the scaffold to be generated without using an ORM, don't worry when rails complains about not finding that ORM...)
 
 Let's launch the server (`rails server`) to see what we have after aa few minutes of work. As you'll see by navigating to http://localhost:3000/accounts we already have a basic account portal that's fully functional!
+
+Gem documentation can be found at https://github.com/chicks/sugarcrm, and questions/problems regarding the gem should be reported there also for quicker resolution.

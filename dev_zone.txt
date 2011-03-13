@@ -128,3 +128,5 @@ SugarCRM::Account.all(:order_by => "name DESC", :limit => 10, :offset => 1).each
 Of course, you can also add a `:conditions` hash in there if you want. Also to be noted: as of this writing the SugarCRM REST API seems to have a bug where the limit and offset options don't work correctly (the value for limit is always considered to be the smaller of the 2 values). This bug is fixed when using the gem: you query will return the expected results, even if the SugarCRM version you're using has this bug. That's how we roll...
 
 Want to learn more? Check out other articles on this gem: how to create a basic Rails portal for SugarCRM using this gem, and advanced gem use (covering thins like using configuration filesfor automatic login, extending the gem, etc.).
+
+Gem documentation can be found at https://github.com/chicks/sugarcrm, and questions/problems regarding the gem should be reported there also for quicker resolution.
