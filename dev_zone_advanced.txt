@@ -37,6 +37,8 @@ SugarCRM::Account.class_eval do
   end
 end
 
+(Note: if you want to extend the gem in Rails 3, simply add that same file somewhere in Rails.root/config/initializers.)
+
 Now, to find out if the first account in SugarCRM was entered less than a year ago, we can simply call
 
 SugarCRM::Account.first.recent_partner?
