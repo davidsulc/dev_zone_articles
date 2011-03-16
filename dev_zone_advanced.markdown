@@ -1,6 +1,7 @@
 This is an article about "advanced" use of the SugarCRM Ruby gem. We've previously covered using basic gem functionality, and building a simple rails app using the gem to make a CRM portal, so you might want to take a look at those first.
 
 Using a config file
+-------------------
 
 The SugarCRM gem can use a configuration file to save you from tediously re-entering your CRM credentials each time you use it (note: this is already the case it you're using the gem with Rails). To use a configuration file, you can add your credentials to one (or more) of
 
@@ -22,6 +23,7 @@ Your configuration should be in YAML format:
 An example, accompanied by instructions, can be found in the `config/sugarcrm.yaml` file. In addition, a working example used for testing can be found in `test/config_test.yaml`
 
 Extending the gem
+-----------------
 
 If you want to extend the gem's capabilities (e.g. to add methods specific to your environment), you can either
 
@@ -31,29 +33,31 @@ If you want to extend the gem's capabilities (e.g. to add methods specific to yo
 
 Let's say we want to add a `SugarCRM::Account#recent_partner?` method that will tell us if we've added this partner in SugarCRM in the last year. We'll simply create a new file at `lib/sugarcrm/extensions/extend_account.rb` containing:
 
-SugarCRM::Account.class_eval do
-  def recent_partner?
-    Time.now - self.date_entered < 1.year
-  end
-end
+    SugarCRM::Account.class_eval do
+      def recent_partner?
+        Time.now - self.date_entered < 1.year
+      end
+    end
 
 (Note: if you want to extend the gem in Rails 3, simply add that same file somewhere in Rails.root/config/initializers.)
 
 Now, to find out if the first account in SugarCRM was entered less than a year ago, we can simply call
 
-SugarCRM::Account.first.recent_partner?
+    SugarCRM::Account.first.recent_partner?
 
 Using direct access to the SugarCRM API
+---------------------------------------
 
-As previously shown, basic SugarCRM queries can be handled with the convenience methods the gem provides. For more specific and advanced use, the gem provides direct access to the SugarCRM API through the `connection` attribute. Here's how you can search for accounts with a shipping or billing addres in Los Angeles (because by default the convenience method use AND on all conditions):
+As previously shown, basic SugarCRM queries can be handled with the convenience methods the gem provides. For more specific and advanced use, the gem provides direct access to the SugarCRM API through the `connection` attribute. Here's how you can search for accounts with a shipping or billing addres in Los Angeles (because by default the convenience method uses AND on all conditions):
 
-SugarCRM.connection.get_entry_list("Accounts", "accounts.billing_address_city = 'Los Angeles' OR accounts.shipping_address_city = 'Los Angeles'")
+    SugarCRM.connection.get_entry_list("Accounts", "accounts.billing_address_city = 'Los Angeles' OR accounts.shipping_address_city = 'Los Angeles'")
 
 Using simultaneous sessions
+---------------------------
 
-This gem allows you to work with several SugarCRM session simultaneously, which can be quite useful when reproducing limited (potentially obfuscated) datasets for testing purposes, moving records to a restructured SugarCRM instance, etc.
+This gem allows you to work with several SugarCRM sessions simultaneously, which can be quite useful when reproducing limited (potentially obfuscated) datasets for testing purposes, moving records to a restructured SugarCRM instance, etc.
 
-How do multiple sessions work? On each `SugarCRM.connect` call, a namespace is returned. Make sure you do NOT store this namespace in a reserved name (such as SugarCRM). This namespace can then be used just like you would use the `SugarCRM` module. For example:
+How do multiple sessions work? On each `SugarCRM.connect` call, a namespace is returned. This namespace can then be used just like you would use the `SugarCRM` module. Make sure you do NOT store this namespace in a reserved name (such as SugarCRM). For example:
 
     ServerOne = SugarCRM.connect(URL1,...)
     ServerOne::User.first
