@@ -3,7 +3,7 @@ The Ruby gem for SugarCRM (https://github.com/chicks/sugarcrm) was already brief
 Setting up
 ----------
 
-The gem is tested with Ruby 1.8.7 and 1.9.2, so you can pick your favorite version. Installing the gem is as easy is `gem install sugarcrm` (note: depending on your particular setup, you might need to call `sudo gem install` instead).
+The gem is tested with Ruby 1.8.7 and 1.9.2, so you can pick your favorite version. Installing the gem is as easy s `gem install sugarcrm` (note: depending on your particular setup, you might need to call `sudo gem install` instead).
 
 If you don't have a SugarCRM server setup to use for testing, try one of the stack installers (http://www.sugarcrm.com/crm/download/sugar-suite.html).
 
@@ -29,7 +29,7 @@ Let's start by seeing which contact was last entered in CRM:
 
     puts SugarCRM::Contact.last.last_name
 
-All SugarCRM modules (i.e. "Contacts", "opportunities", etc.) are namespaced within the `SugarCRM` Ruby module. So `SugarCRM::Contact` gives us access to the `Contact` Ruby class that will wrap all Contacts in CRM. (As a sidenote, any custom modules you may have created in Studio or loded with the Module loader will be available in the same fashion.) From that class, we call the `last` static method with happens to be a finder function (more on those below) that will return the record in SugarCRM with the latest `date_entered` value. Finally, we call the `last_name` attribute on the contact instance to get the person's last name (which is then printed by Ruby).
+All SugarCRM modules (i.e. "Contacts", "Opportunities", etc.) are namespaced within the `SugarCRM` Ruby module. So `SugarCRM::Contact` gives us access to the `Contact` Ruby class that will wrap all Contacts in CRM. (As a side note, any custom modules you may have created in Studio or loaded with the Module loader will be available in the same fashion.) From that class, we call the `last` finder function (more on those below) which will return the record in SugarCRM with the latest `date_entered` value. Finally, we call the `last_name` attribute on the contact instance to get the person's last name (which is then printed by Ruby).
 
 Let's create a new contact:
 
@@ -72,7 +72,7 @@ Now we can add her to the account's contacts:
     account.contacts << alice
     account.save!
 
-You can also call `account.associate(alice)` which will link the two records and save the relationship in one step. There is a major implementation difference, though: when you call `account.contacts`, it loads all of the account's contacts before creating the new association, which might take a long time. If you just want to make sure the two records are linked and haven't already loaded the associated accounts earlier in your code for another reason, it's usually best to call the `associate` method.
+You can also call `account.associate!(alice)` which will link the two records and save the relationship in one step. There is a major implementation difference, though: when you call `account.contacts`, it loads all of the account's contacts before creating the new association, which might take a long time. If you just want to make sure the two records are linked and haven't already loaded the associated accounts, it's usually best to call the `associate` method.
 
 Let's check Alice is now associated with the account, and see how many contacts this account now has:
 
@@ -81,7 +81,7 @@ Let's check Alice is now associated with the account, and see how many contacts 
 
 It turns out Alice wasn't a great fit for the company (she didn't really have people skills). Let's remove her from that account:
 
-account.disassociate(alice)
+account.disassociate!(alice)
 
 You could, of course, simply call `alice.delete` which would delete Alice's record in CRM and all associated relationships, whereas what we did above simply remove the link between the two records, without deleting Alice's record. (In other words, Alice is still in CRM.)
 
@@ -111,11 +111,11 @@ If the record exsits, it will be returned. If no such record exists, it will fir
 Finders
 -------
 
-We've briefly seen how to use the default behavior of the `first` and `last` finders. As their name suggests, these finders will return, respectively, the first or last record matching the criteria (if no criteria is given, the dafult is to sort by date entered). But we can also give conditions to the query: let's search for the first account in Los Angeles.
+We've briefly seen how to use the default behavior of the `first` and `last` finders. As their name suggests, these finders will return, respectively, the first or last record matching the criteria (if no criteria is given, the default is to sort by date entered). But we can also give conditions to the query: let's search for the first account in Los Angeles.
 
   SugarCRM::Account.first(:conditions => {:billing_address_city => "Los Angeles"})
 
-Notice that conditions are specified within a `:conditions` array. By default, the query will search for records where the attribute is equal to the specified value ("Los Angeles" in this case). But there are other ways to use conditons, as you will below.
+Notice that conditions are specified within a `:conditions` array. By default, the query will search for records where the attribute is equal to the specified value ("Los Angeles" in this case). But there are other ways to use conditons, as you will see below.
 
 Let's find the first account with a zip code between 50000 and 800000. Notice how, instead of a single value, we've used an array to specify several conditions (including operators). These conditions will be joined with an SQL `AND` (if you want to use a query with complex boolean algebra, at the time of this writing you'll need to use the direct API method the gem provides, as explained in the "advanced" article).
 
@@ -125,9 +125,9 @@ The last account in California that was created by the administrator (note how c
 
     SugarCRM::Account.last(:conditions => {:billing_address_state => "CA", :created_by_name => "Administrator"})
 
-The gem also has (very limited) SQL operator support, although they must be all uppercase to be recognized. Let's print all the accounts with "Fund" in their name:
+The gem also has (very limited) SQL operator support, although they must be all uppercase to be recognized. Let's print all the accounts with "Inc" in their name:
 
-    SugarCRM::Account.all(:conditions => {:name => "LIKE '%Fund%'"}).each{|a| puts a.name }
+    SugarCRM::Account.all(:conditions => {:name => "LIKE '%Inc%'"}).each{|a| puts a.name }
 
 Notice how this time, instead of calling `first` or `last`, we called `all`. The finder syntax is the same for `all`, the difference lies in the return value: `first` and `last` will return either an instance matching the criteria or `nil`, whereas `all` will return an array of matching object instances (or an empty array if there are none).
 
@@ -137,6 +137,6 @@ Finders also accept some SQL arguments: let's print the list of the 10 last acco
 
 Of course, you can also add a `:conditions` hash in there. Also to be noted: as of this writing the SugarCRM REST API seems to have a bug where the limit and offset options don't work correctly (the value for limit is always considered to be the smaller of the 2 values). This bug is fixed when using the gem: your query will return the expected results, even if the SugarCRM version you're using has this bug. That's how we roll...
 
-Want to learn more? Check out other articles on this gem: how to create a basic Rails portal for SugarCRM using this gem, and advanced gem use (covering thins like using configuration filesfor automatic login, extending the gem, etc.).
+Want to learn more? Check out other articles on this gem: how to create a basic Rails portal for SugarCRM using this gem, and advanced gem use (covering thins like using configuration files for automatic login, extending the gem, etc.).
 
 Gem documentation can be found at https://github.com/chicks/sugarcrm, and questions/problems regarding the gem should be reported there also for quicker resolution.

@@ -48,7 +48,7 @@ Now, to find out if the first account in SugarCRM was entered less than a year a
 Using direct access to the SugarCRM API
 ---------------------------------------
 
-As previously shown, basic SugarCRM queries can be handled with the convenience methods the gem provides. For more specific and advanced use, the gem provides direct access to the SugarCRM API through the `connection` attribute. Here's how you can search for accounts with a shipping or billing addres in Los Angeles (because by default the convenience method uses AND on all conditions):
+As previously shown, basic SugarCRM queries can be handled with the convenience methods the gem provides. For more specific and advanced use, the gem provides direct access to the SugarCRM API through the `connection` attribute. Here's how you can search for accounts with a shipping or billing address in Los Angeles (because by default the convenience method uses AND on all conditions):
 
     SugarCRM.connection.get_entry_list("Accounts", "accounts.billing_address_city = 'Los Angeles' OR accounts.shipping_address_city = 'Los Angeles'")
 
@@ -59,20 +59,20 @@ This gem allows you to work with several SugarCRM sessions simultaneously, which
 
 How do multiple sessions work? On each `SugarCRM.connect` call, a namespace is returned. This namespace can then be used just like you would use the `SugarCRM` module. Make sure you do NOT store this namespace in a reserved name (such as SugarCRM). For example:
 
-    ServerOne = SugarCRM.connect(URL1,...)
+    ServerOne = SugarCRM.connect(URL1, username1, password1)
     ServerOne::User.first
-    ServerTwo = SugarCRM.connect(URL2,...)
+    ServerTwo = SugarCRM.connect(URL2, username2, password2)
     ServerTwo::User.first
 
 If you have only one active session, calls to SugarCRM are delegated to the active session's namespace, like so
 
-    ServerOne = SugarCRM.connect(...)
+    ServerOne = SugarCRM.connect(URL, username, password)
     ServerOne::User.first # this call does
     SugarCRM::User.first # the exact same thing as this one
 
 To replace your session to connect with different credentials, use
 
-    ServerOne.reconnect(...)
+    ServerOne.reconnect(new_URL, new_username, new_password)
 
 Then your session will be reused (SugarCRM modules will be reloaded).
 

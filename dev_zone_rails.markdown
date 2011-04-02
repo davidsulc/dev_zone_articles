@@ -15,7 +15,7 @@ We'll be using the sugarcrm ruby gem for this Rails app, so let's add it to the 
 
     gem 'sugarcrm', :git => 'git://github.com/chicks/sugarcrm.git'
 
-In this case, we're using the git repository so everytime we update our bundle (with, e.g., `bundle update sugarcrm`), we'll be able to use the new features/bug fixes that have been added to the gem. We could also simply use `gem 'sugarcrm'`, but then we'd only gain access to new functionality as gems get released.
+In this case, we're using the git repository so every time we update our bundle (with, e.g., `bundle update sugarcrm`), we'll be able to use the new features/bug fixes that have been added to the gem. We could also simply use `gem 'sugarcrm', but then we'd only gain access to new functionality as new gem versions get released.
 
 Next step, install the bundle, so all the gems we need (in particular the sugarcrm gem we just specified) get added to our app:
 
@@ -26,7 +26,7 @@ Next step, install the bundle, so all the gems we need (in particular the sugarc
 Configuring the connection to SugarCRM
 --------------------------------------
 
-Now that we have our environment up to speed, let's move on to configuring our app to connect to SugarCRM. Type `rails g` in console to see all the rails generators that are available to you. You'll notice that there's a 'SugarCRM' section which displays the generators made available to rails by the sugarcrm gem. Let's use one to generate the configuration for connecting to the SugarCRM server (https://github.com/davidsulc/dev_zone_basic_rails_app/commit/d82cd87337eb95fe915595d18118dae3370222dc):
+Now that we have our environment up to speed, let's move on to configuring our app to connect to SugarCRM. Type `rails g` in the console to see all the rails generators that are available to you. You'll notice that there's a 'SugarCRM' section which displays the generators made available to rails by the sugarcrm gem. Let's use one to generate the configuration for connecting to the SugarCRM server (https://github.com/davidsulc/dev_zone_basic_rails_app/commit/d82cd87337eb95fe915595d18118dae3370222dc):
 
     rails g sugarcrm:config
 
@@ -76,6 +76,6 @@ Now let's generate an 'accounts' scaffold (https://github.com/davidsulc/dev_zone
 Trying it out
 -------------
 
-Let's launch the server (`rails server`) to see what we have after aa few minutes of work. As you'll see by navigating to http://localhost:3000/accounts we already have a basic account portal that's fully functional!
+Let's launch the server (`rails server`) to see what we have after a few minutes of work. As you'll see by navigating to http://localhost:3000/accounts we already have a basic account portal that's fully functional!
 
 Gem documentation can be found at https://github.com/chicks/sugarcrm, and questions/problems regarding the gem should be reported there also for quicker resolution.
